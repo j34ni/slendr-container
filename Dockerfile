@@ -13,7 +13,7 @@ RUN . /opt/conda/etc/profile.d/conda.sh && \
 # Install r-slendr and r-ijtiff using renv and set up slendr Python environment
 RUN . /opt/conda/etc/profile.d/conda.sh && \
     conda activate slendr && \
-    /opt/conda/envs/slendr/bin/R -e "if (!requireNamespace('renv', quietly = TRUE)) install.packages('renv', repos='https://cran.r-project.org'); library(renv)" && \
+    /opt/conda/envs/slendr/bin/R -e "install.packages('renv', repos='https://cran.r-project.org'); library(renv)" && \
     /opt/conda/envs/slendr/bin/R -e "renv::restore(lockfile='/var/tmp/renv.lock', repos='https://cran.r-project.org')" && \
     /opt/conda/envs/slendr/bin/R -e "library(slendr); setup_env(quiet=TRUE, agree=TRUE)" && \
     rm /var/tmp/renv.lock
