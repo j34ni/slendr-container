@@ -15,6 +15,7 @@ dependencies:
   - r-codetools
   - r-getopt
   - r-dplyr
+  - r-renv
   - libtiff
   - libpng
   - libuv

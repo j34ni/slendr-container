@@ -1,8 +1,8 @@
 # Base image
 FROM quay.io/condaforge/miniforge3:24.11.3-2
 
-# Copy environment file
-COPY environment.yml /var/tmp
+# Copy environment and renv files
+COPY environment.yml renv.lock /var/tmp/
 
 # Create and configure Conda environment named slendr using environment.yml
 RUN . /opt/conda/etc/profile.d/conda.sh && \
@@ -10,11 +10,13 @@ RUN . /opt/conda/etc/profile.d/conda.sh && \
     mamba clean -afy && \
     rm /var/tmp/environment.yml
 
-# Install r-slendr and r-ijtiff from CRAN
+# Install r-slendr and r-ijtiff using renv and set up slendr Python environment
 RUN . /opt/conda/etc/profile.d/conda.sh && \
     conda activate slendr && \
-    R -e "install.packages(c('ijtiff', 'slendr'), repos='https://cran.r-project.org')" && \
-    R -e "library(slendr); setup_env(quiet=TRUE, agree=TRUE)"
+    /opt/conda/envs/slendr/bin/R -e "if (!requireNamespace('renv', quietly = TRUE)) install.packages('renv', repos='https://cran.r-project.org'); library(renv)" && \
+    /opt/conda/envs/slendr/bin/R -e "renv::restore(lockfile='/var/tmp/renv.lock', repos='https://cran.r-project.org')" && \
+    /opt/conda/envs/slendr/bin/R -e "library(slendr); setup_env(quiet=TRUE, agree=TRUE)" && \
+    rm /var/tmp/renv.lock
 
 # Copy the start.sh script
 COPY start.sh /opt/slendr/start.sh
