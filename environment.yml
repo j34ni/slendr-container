@@ -1,0 +1,35 @@
+name: slendr
+channels:
+  - conda-forge
+dependencies:
+  - r-base=4.3.3
+  - r-ggplot2
+  - r-png
+  - r-reticulate
+  - r-httpuv
+  - r-shiny
+  - r-shinywidgets
+  - r-sf
+  - r-stars
+  - r-rnaturalearth
+  - r-codetools
+  - r-getopt
+  - r-dplyr
+  - libtiff
+  - libpng
+  - libuv
+  - zlib
+  - libzlib
+  - libjpeg-turbo
+  - slim
+  - gcc
+  - gxx
+  - make
+  - python
+  - pip
+  - pip:
+      - msprime==1.3.3
+      - tskit==0.5.8
+      - pyslim==1.0.4
+      - tspop==0.0.2
+      - pandas
