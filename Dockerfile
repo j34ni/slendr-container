@@ -26,15 +26,18 @@ RUN wget -q -nc --no-check-certificate -P /var/tmp https://github.com/MesserLab/
     make install && \
     rm -rf /var/tmp/SLiM-5.1 /var/tmp/v5.1.tar.gz
 
-# Pre-install Miniconda to the path expected by slendr/reticulate and accept TOS
+# Pre-install Miniconda to a system-wide path and accept TOS
 RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /tmp/miniconda.sh && \
-    bash /tmp/miniconda.sh -b -u -p /root/.local/share/r-miniconda && \
+    bash /tmp/miniconda.sh -b -u -p /opt/r-miniconda && \
     rm /tmp/miniconda.sh
 
-RUN /root/.local/share/r-miniconda/bin/conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/main && \
-    /root/.local/share/r-miniconda/bin/conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/r
+RUN /opt/r-miniconda/bin/conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/main && \
+    /opt/r-miniconda/bin/conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/r
 
-RUN /root/.local/share/r-miniconda/bin/conda update --yes --name base conda -c conda-forge
+RUN /opt/r-miniconda/bin/conda update --yes --name base conda -c conda-forge
+
+# Set system-wide reticulate config to use the new Miniconda path
+RUN echo 'RETICULATE_MINICONDA_PATH="/opt/r-miniconda"' >> /etc/R/Renviron
 
 # Install latest slendr from CRAN (post-1.2.0 version requires/supports SLiM 5, avoiding filter() redef error)
 RUN R -e "install.packages('remotes', repos='https://cran.r-project.org'); install.packages('slendr', repos='https://cran.r-project.org')"
@@ -42,8 +45,8 @@ RUN R -e "install.packages('remotes', repos='https://cran.r-project.org'); insta
 # Install spatial dependencies explicitly
 RUN R -e "install.packages(c('sf', 'stars', 'rnaturalearth'), repos='https://cran.r-project.org')"
 
-# Set up the slendr Python environment (non-interactive)
-RUN R -e "library(slendr); setup_env(agree = TRUE, quiet = TRUE)"
+# Set up the slendr Python environment (non-interactive), using the system-wide path
+RUN R -e "Sys.setenv(RETICULATE_MINICONDA_PATH = '/opt/r-miniconda'); library(slendr); setup_env(agree = TRUE, quiet = TRUE)"
 
 COPY example_slendr.R /var/tmp/example_slendr.R
 
