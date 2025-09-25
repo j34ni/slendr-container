@@ -1,52 +1,50 @@
-# Use the specified Miniforge base image
-FROM quay.io/condaforge/miniforge3:25.3.1-0
+FROM rocker/geospatial:4.4.3
 
-# Switch to root for installations
-USER root
+# Install utils and build tools
+RUN apt-get update && apt-get install -y \
+    wget \
+    tar \
+    cmake \
+    build-essential \
+    libpng-dev \
+    vim \
+    python3 \
+    python3-pip \
+    python3-venv \
+    libgsl-dev && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
-# Copy the environment.yml into the image
-COPY environment.yml /opt/slendr/environment.yml
-
-# Create and activate the slendr env using mamba
-RUN . /opt/conda/etc/profile.d/conda.sh && \
-    mamba env create -f /opt/slendr/environment.yml && \
-    conda activate slendr && \
-    mamba clean --all -f -y
-
-# Install ijtiff from CRAN source (binaries unavailable for R 4.4; system libs enable compile)
-RUN . /opt/conda/etc/profile.d/conda.sh && \
-    conda activate slendr && \
-    R -e "options(repos = c(CRAN = 'https://cran.r-project.org')); install.packages('ijtiff', dependencies = TRUE)"
-
-# Install SLiM 5.1 from source using out-of-source CMake (avoids eidos dir conflict)
-RUN . /opt/conda/etc/profile.d/conda.sh && \
-    conda activate slendr && \
-    wget https://github.com/MesserLab/SLiM/archive/refs/tags/v5.1.tar.gz && \
-    tar xzf v5.1.tar.gz && \
-    cd SLiM-5.1 && \
+# Install SLiM 5.1 
+RUN wget -q -nc --no-check-certificate -P /var/tmp https://github.com/MesserLab/SLiM/archive/refs/tags/v5.1.tar.gz && \
+    tar xf /var/tmp/v5.1.tar.gz -C /var/tmp -z && \
+    cd /var/tmp/SLiM-5.1 && \
     mkdir build && \
     cd build && \
     cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local \
-             -DCMAKE_AR=/opt/conda/envs/slendr/bin/x86_64-conda-linux-gnu-ar \
-             -DCMAKE_RANLIB=/opt/conda/envs/slendr/bin/x86_64-conda-linux-gnu-ranlib && \
     make && \
     make install && \
-    cd ../.. && \
-    rm -rf SLiM-5.1 v5.1.tar.gz
+    rm -rf /var/tmp/SLiM-5.1 /var/tmp/v5.1.tar.gz
 
-# Install slendr 1.2.0 using remotes (deps=TRUE installs any remaining CRAN binaries)
-RUN . /opt/conda/etc/profile.d/conda.sh && \
-    conda activate slendr && \
-    R -e "options(repos = c(CRAN = 'https://cran.r-project.org')); remotes::install_version('slendr', version = '1.2.0', dependencies = TRUE)"
+# Pre-install Miniconda to the path expected by slendr/reticulate and accept TOS
+RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /tmp/miniconda.sh && \
+    bash /tmp/miniconda.sh -b -u -p /root/.local/share/r-miniconda && \
+    rm /tmp/miniconda.sh
 
-# Run slendr setup for Python env (msprime 1.3.4, tskit 0.6.4, etc.; SLiM now in PATH)
-RUN . /opt/conda/etc/profile.d/conda.sh && \
-    conda activate slendr && \
-    R -e "Sys.setenv(CONDA_PLUGINS_AUTO_ACCEPT_TOS = '1'); library(slendr); slendr::setup_env(agree = TRUE, quiet = TRUE)"
+RUN /root/.local/share/r-miniconda/bin/conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/main && \
+    /root/.local/share/r-miniconda/bin/conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/r
 
-# Copy and make executable the startup script for env activation
-COPY start.sh /opt/slendr/start.sh
-RUN chmod +x /opt/slendr/start.sh
+RUN /root/.local/share/r-miniconda/bin/conda update --yes --name base conda -c conda-forge
 
-# Entrypoint: Activate env and exec the command (e.g., defaults to R)
-ENTRYPOINT ["/bin/bash", "-c", ". /opt/slendr/start.sh && exec \"$@\"", "--"]
+# Install latest slendr from CRAN (post-1.2.0 version requires/supports SLiM 5, avoiding filter() redef error)
+RUN R -e "install.packages('remotes', repos='https://cran.r-project.org'); install.packages('slendr', repos='https://cran.r-project.org')"
+
+# Install spatial dependencies explicitly
+RUN R -e "install.packages(c('sf', 'stars', 'rnaturalearth'), repos='https://cran.r-project.org')"
+
+# Set up the slendr Python environment (non-interactive)
+RUN R -e "library(slendr); setup_env(agree = TRUE, quiet = TRUE)"
+
+COPY example_slendr.R /var/tmp/example_slendr.R
+
+CMD ["bash"]
