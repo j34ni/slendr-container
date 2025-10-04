@@ -1,13 +1,19 @@
-# slendr-container
+# Slendr-container
 This repository provides a Dockerfile starting from a rocker/geospatial:4.4.3 image to run slendr-1.2.0
 
-It also contains a `example.R` that one can run as follows:
+The corresponding container is available on `quay.io/jeani/slendr:main`
+
+A file `example.R` is also included here for testing, place it in your *current directory* and run it as follows with Docker (typically on your laptop) or Singularity/Apptainer (on HPC):
 
 ### With Docker
 
 ```
+docker pull quay.io/jeani/slendr:latest
+```
+```
 docker run -it --rm -v $PWD:/opt/uio slendr:latest Rscript /opt/uio/example.R
-
+```
+```
 Attaching package: ‘dplyr’
 
 The following objects are masked from ‘package:stats’:
@@ -137,11 +143,27 @@ Attempting to extract genotypes from a tree sequence without mutations
 Demo VCF generated with ts_vcf() on non-slendr ts: simple_non_slendr.vcf.gz 
 
 ```
+which should create in your current directory the following files:
 
-### with Singularity
 ```
-singularity exec --env RETICULATE_MINICONDA_PATH=/root/.local/share/r-miniconda --bind $PWD:/opt/uio slendr_main.sif Rscript /opt/uio/example.R
+geneflow_P3toP1_Nobn_small_AncestryProportions.csv
+geneflow_P3toP1_Nobn_small_F4.csv
+geneflow_P3toP1_Nobn_small.trees
+geneflow_P3toP1_Nobn_small.vcf.gz
+simple_non_slendr.vcf.gz
+```
 
+### With Singularity (or Apptainer)
+Pull the container image first
+```
+singularity pull docker://quay.io/jeani/slendr:latest
+```
+then execute it (and do not forget the `--env RETICULATE_MINICONDA_PATH=/root/.local/share/r-miniconda`)
+```
+singularity exec --env RETICULATE_MINICONDA_PATH=/root/.local/share/r-miniconda --bind $PWD:/opt/uio slendr_latest.sif Rscript /opt/uio/example.R
+```
+you should get something like
+```
 Attaching package: ‘dplyr’
 
 The following objects are masked from ‘package:stats’:
@@ -270,4 +292,13 @@ Warning message:
 Attempting to extract genotypes from a tree sequence without mutations 
 Demo VCF generated with ts_vcf() on non-slendr ts: simple_non_slendr.vcf.gz 
 
+```
+which will also create in your current directory the following files:
+
+```
+geneflow_P3toP1_Nobn_small_AncestryProportions.csv
+geneflow_P3toP1_Nobn_small_F4.csv
+geneflow_P3toP1_Nobn_small.trees
+geneflow_P3toP1_Nobn_small.vcf.gz
+simple_non_slendr.vcf.gz
 ```
