@@ -1,82 +1,273 @@
 # slendr-container
 This repository provides a Dockerfile starting from a rocker/geospatial:4.4.3 image to run slendr-1.2.0
 
-## With Docker:
+It also contains a `example.R` that one can run as follows:
+
+### With Docker
 
 ```
-docker run -it --rm slendr R
+docker run -it --rm -v $PWD:/opt/uio slendr:latest Rscript /opt/uio/example.R
 
-R version 4.4.3 (2025-02-28) -- "Trophy Case"
-Copyright (C) 2025 The R Foundation for Statistical Computing
-Platform: x86_64-pc-linux-gnu
+Attaching package: ‘dplyr’
 
-R is free software and comes with ABSOLUTELY NO WARRANTY.
-You are welcome to redistribute it under certain conditions.
-Type 'license()' or 'licence()' for distribution details.
+The following objects are masked from ‘package:stats’:
 
-  Natural language support but running in an English locale
+    filter, lag
 
-R is a collaborative project with many contributors.
-Type 'contributors()' for more information and
-'citation()' on how to cite R or R packages in publications.
+The following objects are masked from ‘package:base’:
 
-Type 'demo()' for some demos, 'help()' for on-line help, or
-'help.start()' for an HTML browser interface to help.
-Type 'q()' to quit R.
+    intersect, setdiff, setequal, union
 
-> library(slendr)
-> init_env()
 The interface to all required Python modules has been activated.
-> check_env() 
-Summary of the currently active Python environment:
+[1] 1005
+Starting msprime simulation...
+msprime simulation completed.
+╔═══════════════════════════╗
+║TreeSequence               ║
+╠═══════════════╤═══════════╣
+║Trees          │        522║
+╟───────────────┼───────────╢
+║Sequence Length│    100,000║
+╟───────────────┼───────────╢
+║Time Units     │generations║
+╟───────────────┼───────────╢
+║Sample Nodes   │         40║
+╟───────────────┼───────────╢
+║Total Size     │   94.6 KiB║
+╚═══════════════╧═══════════╝
+╔═══════════╤═════╤═════════╤════════════╗
+║Table      │Rows │Size     │Has Metadata║
+╠═══════════╪═════╪═════════╪════════════╣
+║Edges      │1,876│ 58.6 KiB│          No║
+╟───────────┼─────┼─────────┼────────────╢
+║Individuals│   20│584 Bytes│          No║
+╟───────────┼─────┼─────────┼────────────╢
+║Migrations │    0│  8 Bytes│          No║
+╟───────────┼─────┼─────────┼────────────╢
+║Mutations  │    0│ 16 Bytes│          No║
+╟───────────┼─────┼─────────┼────────────╢
+║Nodes      │  619│ 16.9 KiB│          No║
+╟───────────┼─────┼─────────┼────────────╢
+║Populations│    4│357 Bytes│         Yes║
+╟───────────┼─────┼─────────┼────────────╢
+║Provenances│    1│  2.7 KiB│          No║
+╟───────────┼─────┼─────────┼────────────╢
+║Sites      │    0│ 16 Bytes│          No║
+╚═══════════╧═════╧═════════╧════════════╝
 
-Python binary: /root/.local/share/r-miniconda/envs/Python-3.12_msprime-1.3.4_tskit-0.6.4_pyslim-1.0.4_tspop-0.0.2/bin/python 
-Python version: 3.12.11 | packaged by conda-forge | (main, Jun  4 2025, 14:45:31) [GCC 13.3.0] 
+╔═══════════════════════════╗
+║TreeSequence               ║
+╠═══════════════╤═══════════╣
+║Trees          │        522║
+╟───────────────┼───────────╢
+║Sequence Length│    100,000║
+╟───────────────┼───────────╢
+║Time Units     │generations║
+╟───────────────┼───────────╢
+║Sample Nodes   │         40║
+╟───────────────┼───────────╢
+║Total Size     │    1.3 MiB║
+╚═══════════════╧═══════════╝
+╔═══════════╤══════╤═════════╤════════════╗
+║Table      │Rows  │Size     │Has Metadata║
+╠═══════════╪══════╪═════════╪════════════╣
+║Edges      │ 1,876│ 58.6 KiB│          No║
+╟───────────┼──────┼─────────┼────────────╢
+║Individuals│    20│584 Bytes│          No║
+╟───────────┼──────┼─────────┼────────────╢
+║Migrations │     0│  8 Bytes│          No║
+╟───────────┼──────┼─────────┼────────────╢
+║Mutations  │20,596│744.2 KiB│          No║
+╟───────────┼──────┼─────────┼────────────╢
+║Nodes      │   619│ 16.9 KiB│          No║
+╟───────────┼──────┼─────────┼────────────╢
+║Populations│     4│357 Bytes│         Yes║
+╟───────────┼──────┼─────────┼────────────╢
+║Provenances│     2│  3.4 KiB│          No║
+╟───────────┼──────┼─────────┼────────────╢
+║Sites      │18,605│454.2 KiB│          No║
+╚═══════════╧══════╧═════════╧════════════╝
 
-slendr requirements:
- - tskit: version 0.6.4 ✓ 
- - msprime: version 1.3.4 ✓ 
- - pyslim: version 1.0.4 ✓ 
- - tspop: present ✓ 
-> quit()
+Main VCF generated with ts_vcf(): geneflow_P3toP1_Nobn_small.vcf.gz 
+# A tibble: 1 × 5
+  W                                            X             Y     Z          f4
+  <chr>                                        <chr>         <chr> <chr>   <dbl>
+1 melano_1+melano_2+melano_3+melano_4+melano_5 simulans_1+s… yaku… eugr… 0.00289
+
+PopAncestry summary
+Number of ancestral populations: 	4
+Number of sample chromosomes: 		40
+Number of ancestors: 			215
+Total length of genomes: 		4000000.000000
+Ancestral coverage: 			4000000.000000
+
+# A tibble: 50 × 10
+   name     haplotype  time pop    source_pop  left right length source_pop_id
+   <chr>        <int> <dbl> <chr>  <fct>      <dbl> <dbl>  <dbl>         <dbl>
+ 1 melano_1         1     0 melano yakuba     63508 63837    329             1
+ 2 melano_1         1     0 melano yakuba     67833 69052   1219             1
+ 3 melano_1         1     0 melano yakuba     71880 73263   1383             1
+ 4 melano_1         1     0 melano yakuba     74013 74539    526             1
+ 5 melano_1         1     0 melano yakuba     80569 90429   9860             1
+ 6 melano_1         2     0 melano yakuba     63508 63837    329             1
+ 7 melano_1         2     0 melano yakuba     67833 69052   1219             1
+ 8 melano_1         2     0 melano yakuba     71880 73263   1383             1
+ 9 melano_1         2     0 melano yakuba     74013 74539    526             1
+10 melano_1         2     0 melano yakuba     80569 90429   9860             1
+# ℹ 40 more rows
+# ℹ 1 more variable: node_id <dbl>
+`summarise()` has grouped output by 'name', 'node_id', 'pop'. You can override using the `.groups` argument.
+# A tibble: 10 × 5
+# Groups:   name, node_id, pop [10]
+   name     node_id pop    source_pop  prop
+   <chr>      <dbl> <chr>  <fct>      <dbl>
+ 1 melano_1      10 melano yakuba     0.133
+ 2 melano_1      11 melano yakuba     0.133
+ 3 melano_2      12 melano yakuba     0.133
+ 4 melano_2      13 melano yakuba     0.133
+ 5 melano_3      14 melano yakuba     0.133
+ 6 melano_3      15 melano yakuba     0.133
+ 7 melano_4      16 melano yakuba     0.133
+ 8 melano_4      17 melano yakuba     0.133
+ 9 melano_5      18 melano yakuba     0.133
+10 melano_5      19 melano yakuba     0.133
+Demo: Testing ts_vcf() on a direct msprime (non-slendr) tree sequence...
+Warning message:
+Attempting to extract genotypes from a tree sequence without mutations 
+Demo VCF generated with ts_vcf() on non-slendr ts: simple_non_slendr.vcf.gz 
+
 ```
 
-## With Apptainer add library(reticulate) and use_python():
+### with Singularity
 ```
-apptainer exec slendr_main.sif R
+singularity exec --env RETICULATE_MINICONDA_PATH=/root/.local/share/r-miniconda --bind $PWD:/opt/uio slendr_main.sif Rscript /opt/uio/example.R
 
-R version 4.4.3 (2025-02-28) -- "Trophy Case"
-Copyright (C) 2025 The R Foundation for Statistical Computing
-Platform: x86_64-pc-linux-gnu
+Attaching package: ‘dplyr’
 
-R is free software and comes with ABSOLUTELY NO WARRANTY.
-You are welcome to redistribute it under certain conditions.
-Type 'license()' or 'licence()' for distribution details.
+The following objects are masked from ‘package:stats’:
 
-  Natural language support but running in an English locale
+    filter, lag
 
-R is a collaborative project with many contributors.
-Type 'contributors()' for more information and
-'citation()' on how to cite R or R packages in publications.
+The following objects are masked from ‘package:base’:
 
-Type 'demo()' for some demos, 'help()' for on-line help, or
-'help.start()' for an HTML browser interface to help.
-Type 'q()' to quit R.
+    intersect, setdiff, setequal, union
 
-> library(reticulate)
-> use_python("/root/.local/share/r-miniconda/envs/Python-3.12_msprime-1.3.4_tskit-0.6.4_pyslim-1.0.4_tspop-0.0.2/bin/python")
-> library(slendr)
-> check_env() 
-Summary of the currently active Python environment:
+The interface to all required Python modules has been activated.
+[1] 1005
+Starting msprime simulation...
+msprime simulation completed.
+╔═══════════════════════════╗
+║TreeSequence               ║
+╠═══════════════╤═══════════╣
+║Trees          │        522║
+╟───────────────┼───────────╢
+║Sequence Length│    100,000║
+╟───────────────┼───────────╢
+║Time Units     │generations║
+╟───────────────┼───────────╢
+║Sample Nodes   │         40║
+╟───────────────┼───────────╢
+║Total Size     │   94.6 KiB║
+╚═══════════════╧═══════════╝
+╔═══════════╤═════╤═════════╤════════════╗
+║Table      │Rows │Size     │Has Metadata║
+╠═══════════╪═════╪═════════╪════════════╣
+║Edges      │1,876│ 58.6 KiB│          No║
+╟───────────┼─────┼─────────┼────────────╢
+║Individuals│   20│584 Bytes│          No║
+╟───────────┼─────┼─────────┼────────────╢
+║Migrations │    0│  8 Bytes│          No║
+╟───────────┼─────┼─────────┼────────────╢
+║Mutations  │    0│ 16 Bytes│          No║
+╟───────────┼─────┼─────────┼────────────╢
+║Nodes      │  619│ 16.9 KiB│          No║
+╟───────────┼─────┼─────────┼────────────╢
+║Populations│    4│357 Bytes│         Yes║
+╟───────────┼─────┼─────────┼────────────╢
+║Provenances│    1│  2.7 KiB│          No║
+╟───────────┼─────┼─────────┼────────────╢
+║Sites      │    0│ 16 Bytes│          No║
+╚═══════════╧═════╧═════════╧════════════╝
 
-Python binary: /root/.local/share/r-miniconda/envs/Python-3.12_msprime-1.3.4_tskit-0.6.4_pyslim-1.0.4_tspop-0.0.2/bin/python 
-Python version: 3.12.11 | packaged by conda-forge | (main, Jun  4 2025, 14:45:31) [GCC 13.3.0] 
+╔═══════════════════════════╗
+║TreeSequence               ║
+╠═══════════════╤═══════════╣
+║Trees          │        522║
+╟───────────────┼───────────╢
+║Sequence Length│    100,000║
+╟───────────────┼───────────╢
+║Time Units     │generations║
+╟───────────────┼───────────╢
+║Sample Nodes   │         40║
+╟───────────────┼───────────╢
+║Total Size     │    1.3 MiB║
+╚═══════════════╧═══════════╝
+╔═══════════╤══════╤═════════╤════════════╗
+║Table      │Rows  │Size     │Has Metadata║
+╠═══════════╪══════╪═════════╪════════════╣
+║Edges      │ 1,876│ 58.6 KiB│          No║
+╟───────────┼──────┼─────────┼────────────╢
+║Individuals│    20│584 Bytes│          No║
+╟───────────┼──────┼─────────┼────────────╢
+║Migrations │     0│  8 Bytes│          No║
+╟───────────┼──────┼─────────┼────────────╢
+║Mutations  │20,596│744.2 KiB│          No║
+╟───────────┼──────┼─────────┼────────────╢
+║Nodes      │   619│ 16.9 KiB│          No║
+╟───────────┼──────┼─────────┼────────────╢
+║Populations│     4│357 Bytes│         Yes║
+╟───────────┼──────┼─────────┼────────────╢
+║Provenances│     2│  3.4 KiB│          No║
+╟───────────┼──────┼─────────┼────────────╢
+║Sites      │18,605│454.2 KiB│          No║
+╚═══════════╧══════╧═════════╧════════════╝
 
-slendr requirements:
- - tskit: version 0.6.4 ✓ 
- - msprime: version 1.3.4 ✓ 
- - pyslim: version 1.0.4 ✓ 
- - tspop: present ✓ 
-> quit()
+Main VCF generated with ts_vcf(): geneflow_P3toP1_Nobn_small.vcf.gz 
+# A tibble: 1 × 5
+  W                                            X             Y     Z          f4
+  <chr>                                        <chr>         <chr> <chr>   <dbl>
+1 melano_1+melano_2+melano_3+melano_4+melano_5 simulans_1+s… yaku… eugr… 0.00289
+
+PopAncestry summary
+Number of ancestral populations: 	4
+Number of sample chromosomes: 		40
+Number of ancestors: 			215
+Total length of genomes: 		4000000.000000
+Ancestral coverage: 			4000000.000000
+
+# A tibble: 50 × 10
+   name     haplotype  time pop    source_pop  left right length source_pop_id
+   <chr>        <int> <dbl> <chr>  <fct>      <dbl> <dbl>  <dbl>         <dbl>
+ 1 melano_1         1     0 melano yakuba     63508 63837    329             1
+ 2 melano_1         1     0 melano yakuba     67833 69052   1219             1
+ 3 melano_1         1     0 melano yakuba     71880 73263   1383             1
+ 4 melano_1         1     0 melano yakuba     74013 74539    526             1
+ 5 melano_1         1     0 melano yakuba     80569 90429   9860             1
+ 6 melano_1         2     0 melano yakuba     63508 63837    329             1
+ 7 melano_1         2     0 melano yakuba     67833 69052   1219             1
+ 8 melano_1         2     0 melano yakuba     71880 73263   1383             1
+ 9 melano_1         2     0 melano yakuba     74013 74539    526             1
+10 melano_1         2     0 melano yakuba     80569 90429   9860             1
+# ℹ 40 more rows
+# ℹ 1 more variable: node_id <dbl>
+`summarise()` has grouped output by 'name', 'node_id', 'pop'. You can override using the `.groups` argument.
+# A tibble: 10 × 5
+# Groups:   name, node_id, pop [10]
+   name     node_id pop    source_pop  prop
+   <chr>      <dbl> <chr>  <fct>      <dbl>
+ 1 melano_1      10 melano yakuba     0.133
+ 2 melano_1      11 melano yakuba     0.133
+ 3 melano_2      12 melano yakuba     0.133
+ 4 melano_2      13 melano yakuba     0.133
+ 5 melano_3      14 melano yakuba     0.133
+ 6 melano_3      15 melano yakuba     0.133
+ 7 melano_4      16 melano yakuba     0.133
+ 8 melano_4      17 melano yakuba     0.133
+ 9 melano_5      18 melano yakuba     0.133
+10 melano_5      19 melano yakuba     0.133
+Demo: Testing ts_vcf() on a direct msprime (non-slendr) tree sequence...
+Warning message:
+Attempting to extract genotypes from a tree sequence without mutations 
+Demo VCF generated with ts_vcf() on non-slendr ts: simple_non_slendr.vcf.gz 
 
 ```
