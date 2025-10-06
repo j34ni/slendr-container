@@ -296,9 +296,20 @@ Demo VCF generated with ts_vcf() on non-slendr ts: simple_non_slendr.vcf.gz
 which will also create in your current directory the following files:
 
 ```
+
+Should you use this container for your research, or distribute it, please cite Jean Iaquinta. (2025). j34ni/slendr-container: Version 1.2.0 (1.2.0). Zenodo. https://doi.org/10.5281/zenodo.17276069
+
+
 geneflow_P3toP1_Nobn_small_AncestryProportions.csv
 geneflow_P3toP1_Nobn_small_F4.csv
 geneflow_P3toP1_Nobn_small.trees
 geneflow_P3toP1_Nobn_small.vcf.gz
 simple_non_slendr.vcf.gz
 ```
+
+## Citation
+
+If you use this container recipe and/or image please cite:
+
+Jean Iaquinta. (2025). j34ni/slendr-container: Version 1.2.0 (1.2.0). Zenodo. https://doi.org/10.5281/zenodo.17276069
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17276069.svg)](https://doi.org/10.5281/zenodo.17276069)
